@@ -1,0 +1,1 @@
+add_plugin(pwa_resonances SOURCES src/PPWAResonancesPlugin.cc HEADERS include/PPWAResonancesPlugin.h CLASSES PPWAResonancesPlugin)
