@@ -67,8 +67,11 @@ include(${ROOT_USE_FILE})
 
 SET(ROOT_VERSION_LEGACY 6.22.00)
 
-#---Create a shared library with geneated dictionary
-add_library(Pluto SHARED ${SOURCES} ${CMAKE_BINARY_DIR}/Compiled.h ${CMAKE_BINARY_DIR}/Version.h)
+#---Leave option to build pluto as static lib for embedding into external binaries
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
+#---Create a shared library with generated dictionary
+add_library(Pluto ${SOURCES} ${CMAKE_BINARY_DIR}/Compiled.h ${CMAKE_BINARY_DIR}/Version.h)
 add_library(Pluto::Pluto ALIAS Pluto)
 
 target_include_directories(Pluto
