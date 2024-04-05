@@ -255,6 +255,18 @@ Bool_t PStrangenessPlugin::ExecCommand(const char *command, Double_t) {
                 Error("ExecCommand", "PIDs blocked, plugin disabled");
             }
 
+            if (makeStaticData()->AddParticle(80, "KStar", 0.891) > 0) {
+                makeStaticData()->AddAlias("KStar", "K*(892)");
+
+                makeStaticData()->SetParticleTotalWidth("KStar", 0.0508);
+                makeStaticData()->SetParticleBaryon("KStar", 0);
+                makeStaticData()->SetParticleMeson("KStar", 1);
+
+                makeStaticData()->AddDecay(-1,"K*(892) --> K0S + pi+", "KStar", "K0S,pi+", 1.0);
+            } else {
+                Error("ExecCommand", "PIDs blocked, plugin disabled");
+            }
+
             (*system_alloc_verbosity) = old;
         }
         return kTRUE;
