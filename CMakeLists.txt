@@ -67,17 +67,20 @@ include(${ROOT_USE_FILE})
 
 SET(ROOT_VERSION_LEGACY 6.22.00)
 
-#---Create a shared library with geneated dictionary
-add_library(Pluto SHARED ${SOURCES} ${CMAKE_BINARY_DIR}/Compiled.h ${CMAKE_BINARY_DIR}/Version.h)
+#---Leave option to build pluto as static lib for embedding into external binaries
+option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
+
+#---Create a shared library with generated dictionary
+add_library(Pluto ${SOURCES} ${PROJECT_BINARY_DIR}/Compiled.h ${PROJECT_BINARY_DIR}/Version.h)
 add_library(Pluto::Pluto ALIAS Pluto)
 
 target_include_directories(Pluto
     PUBLIC
         $<INSTALL_INTERFACE:include>
     PRIVATE
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/inc>
-        $<BUILD_INTERFACE:${CMAKE_SOURCE_DIR}/include>
-        ${CMAKE_BINARY_DIR}
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/inc>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
+        ${PROJECT_BINARY_DIR}
 )
 
 if (${ROOT_VERSION} VERSION_LESS ${ROOT_VERSION_LEGACY})
@@ -154,7 +157,7 @@ configure_file(Version.h.in Version.h)
 #    "${PROJECT_BINARY_DIR}")
 
 add_custom_target(Compiled.h)
-add_custom_command(OUTPUT Compiled.h COMMAND echo char *date_string = \\\(char*\\\) \\\"\$\$\(date +\"%e %B %Y\"\)\\\"  > ${CMAKE_CURRENT_BINARY_DIR}/Compiled.h DEPENDS G__Pluto.cxx ${SOURCES})
+add_custom_command(OUTPUT Compiled.h COMMAND echo char *date_string = \\\(char*\\\) \\\"\$\$\(date +\"%e %B %Y\"\)\\\"  > ${PROJECT_BINARY_DIR}/Compiled.h DEPENDS G__Pluto.cxx ${SOURCES})
 
 # Install logic
 set(CMAKE_INSTALL_CMAKEDIR ${CMAKE_INSTALL_LIBDIR}/cmake/Pluto-${PROJECT_VERSION})
@@ -165,8 +168,8 @@ install(TARGETS Pluto
     PUBLIC_HEADER DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${PLUTO_SLOT})
 
 install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/libPluto.rootmap
-        ${CMAKE_CURRENT_BINARY_DIR}/libPluto_rdict.pcm
+        ${PROJECT_BINARY_DIR}/libPluto.rootmap
+        ${PROJECT_BINARY_DIR}/libPluto_rdict.pcm
         DESTINATION ${CMAKE_INSTALL_LIBDIR})
 
 INSTALL(DIRECTORY macros/
